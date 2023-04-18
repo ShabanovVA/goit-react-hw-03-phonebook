@@ -17,6 +17,21 @@ state = {
   filter: '',
   }
   
+  componentDidMount() {
+    const localContacts = localStorage.getItem(CONTACTS_KEY);
+    const parsedLocalContacts = JSON.parse(localContacts);
+
+    if (parsedLocalContacts) {
+      this.setState({ contacts: parsedLocalContacts });
+    }
+  };
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem(CONTACTS_KEY, JSON.stringify(this.state.contacts));
+    };
+  };
+  
   createContact = (data) => {
     this.setState(prevState => {
       return { contacts: [...prevState.contacts,data] };
@@ -36,21 +51,6 @@ state = {
   getFiltredContacts = () => {
     const normalizedFilter = this.state.filter.toLowerCase();
     return this.state.contacts.filter(contact => contact.name.toLowerCase().includes(normalizedFilter));
-  };
-
-  componentDidMount() {
-    const localContacts = localStorage.getItem(CONTACTS_KEY);
-    const parsedLocalContacts = JSON.parse(localContacts);
-
-    if (parsedLocalContacts) {
-      this.setState({ contacts: parsedLocalContacts });
-    }
-  };
-
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.contacts !== prevState.contacts) {
-      localStorage.setItem(CONTACTS_KEY, JSON.stringify(this.state.contacts));
-    };
   };
 
   render() {
